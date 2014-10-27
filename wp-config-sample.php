@@ -16,13 +16,13 @@
 
 // ** Ajustes de MySQL. Solicita estos datos a tu proveedor de alojamiento web. ** //
 /** El nombre de tu base de datos de WordPress */
-define('DB_NAME', 'wordpress_test');
+define('DB_NAME', 'nombredetubasededatos');
 
 /** Tu nombre de usuario de MySQL */
-define('DB_USER', 'root');
+define('DB_USER', 'nombredeusuario');
 
 /** Tu contraseña de MySQL */
-define('DB_PASSWORD', 'root');
+define('DB_PASSWORD', 'contraseña');
 
 /** Host de MySQL (es muy probable que no necesites cambiarlo) */
 define('DB_HOST', 'localhost');
@@ -61,15 +61,6 @@ define('NONCE_SALT', 'pon aquí tu frase aleatoria'); // Cambia esto por tu fras
  */
 $table_prefix  = 'wp_';
 
-/**
- * Idioma de WordPress.
- *
- * Cambia lo siguiente para tener WordPress en tu idioma. El correspondiente archivo MO
- * del lenguaje elegido debe encontrarse en wp-content/languages.
- * Por ejemplo, instala ca_ES.mo copiándolo a wp-content/languages y define WPLANG como 'ca_ES'
- * para traducir WordPress al catalán.
- */
-define('WPLANG', 'es_ES');
 
 /**
  * Para desarrolladores: modo debug de WordPress.

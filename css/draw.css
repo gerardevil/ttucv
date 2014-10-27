@@ -1,0 +1,329 @@
+
+#drawPrincipal{
+	clear:both;
+	float:left;
+	width:100%;
+	text-align:left;
+	color:black;
+	/*font-size:15px;*/
+	padding:5px 0 16px;
+	_padding-bottom:0;
+	/*font-weight:bold;*/
+	_position:relative;
+	margin:0;
+}
+
+#drawPrincipal hr{
+	display: block;
+	position: relative;
+	left: 0px;
+	clear:both;
+	width:100%;
+}
+
+#drawEvento{
+	position: relative;
+	left: 1em;
+	top: 0em;
+}
+
+.drawEventoContenedor {
+	float: left;
+	position: absoluta;
+	top: 0px;
+	display:inline-block;
+	padding:0 0 0 0;
+	width:auto;
+	margin:10px;
+}
+
+.drawDetalle{
+	clear:both;
+	width:100%;
+	min-height: 480px;
+}
+
+.drawDetalle p{
+	text-align:center;
+}
+
+.drawDetalle table {
+	width: 100%;
+}
+
+
+.drawDetalle table thead {
+	/*display: none;*/
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #72b84c;
+	text-align:center;
+}
+
+
+.drawDetalle table tbody tr {
+	width: 100%;
+}
+
+
+.drawDetalle table tbody tr td {
+	vertical-align: top;
+}
+
+
+.drawDetalle table .drawItem {
+	display: block;
+	position: relative;
+	border-bottom: solid 2px #CCC;
+}
+
+.drawDetalle table .even {
+	border-right: solid 2px #CCC;
+}
+
+.drawDetalle table .drawItem .numero {
+	position: absolute;
+	font-family: Arial, Helvetica, sans-serif, Verdana;
+	font-size: 10px;
+	/*bottom: 0px;
+	left: 4px;*/
+}
+
+.drawDetalle table .drawItem p {
+	position: absolute;
+	font-size: 11px;
+}
+
+.drawDetalle table .drawItem .jugadoresContenedor {
+	position: absolute;
+	bottom: 1px;
+	left: 0px;
+}
+
+.drawDetalle table .drawItem .jugador {
+	position: relative;
+	display: block;
+	bottom: 1px;
+	left: 1px;
+	line-height: 12px;
+	/*padding-right: 12px;*/
+	clear: left;
+}
+
+
+.drawDetalle table .drawItem .ganador {
+	font-weight: bold;
+}
+
+
+.drawDetalle table .col_1 .drawItem .jugadoresContenedor {
+	position: absolute;
+	bottom: 1px;
+	left: 20px;
+}
+
+.drawDetalle table .col_1 .drawItem .jugadoresContenedor .jugador {
+	position: relative;
+	display: block;
+}
+
+
+.drawDetalle table .drawItem .jugadoresContenedor p {
+	display: block;
+	position: relative;
+	color: #666;
+	line-height: 12px;
+}
+
+.drawDetalle table .col_1 .drawItem .jugadoresContenedor p {
+	display: inline;
+	position: relative;
+	color: #666;
+	line-height: 12px;
+}
+
+.drawDetalle table .drawItem .scores {
+	position: absolute;
+	bottom: -34px;
+	left: 4px;
+	line-height: 14px;
+	height: 32px;
+}
+
+.drawDetalle table .drawItem .scores a,
+.drawDetalle table .drawItem .scores p {
+	position: relative;
+	display: block;
+	margin: 0 15px 0 0;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #545454;
+	font-size: 10px;
+	text-decoration:none;
+}
+
+
+
+.drawDetalle table .drawItem a {
+	position: absolute;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	/*font-weight: bold;*/
+	color: #545454;
+	z-index: 1;
+	text-decoration:none;
+}
+
+
+.drawDetalle table .drawItem .jugador a {
+	position: relative;
+	display: block;
+	line-height: 10px;
+	text-decoration:none;
+}
+
+.drawDetalle table td .col_1 {
+	width: 232px;
+}
+
+.drawDetalle table td {
+	width: 142px;
+}
+
+.drawDetalle table tbody .col_1 {
+	padding-top: 16px;
+}
+
+.doubles table tbody .col_1 {
+	padding-top: 28px;
+}
+
+.drawDetalle table .col_1 .drawItem {
+	height: 28px;
+}
+
+.doubles table .col_1 .drawItem {
+	height: 52px;
+}
+
+.drawDetalle table .col_2 .drawItem {
+	height: 58px;/*16 + heingt col anterior + heingt col anterior/2 */
+}
+
+.doubles table .col_2 .drawItem {
+	height: 106px;/*28 + heingt col anterior + heingt col anterior/2 */
+}
+
+.drawDetalle table .col_3 .drawItem {
+	height: 118px;
+}
+
+.doubles table .col_3 .drawItem {
+	height: 214px;
+}
+
+.drawDetalle table .col_3 .first {
+	height: 87px;
+}
+
+.doubles table .col_3 .first {
+	height: 160px;
+}
+
+.drawDetalle table .col_4 .drawItem {
+	height: 238px;
+}
+
+.doubles table .col_4 .drawItem {
+	height: 430px;
+}
+
+.drawDetalle table .col_4 .first {
+	height: 145px;
+}
+
+.doubles table .col_4 .first {
+	height: 260px;
+}
+
+.drawDetalle table .col_5 .drawItem {
+	height: 478px;
+}
+
+.doubles table .col_5 .drawItem {
+	height: 862px;
+}
+
+.drawDetalle table .col_5 .first {
+	height: 260px;
+}
+
+.doubles table .col_5 .first {
+	height: 470px;
+}
+
+.drawDetalle table .col_6 .drawItem {
+	height: 958px;
+}
+
+.doubles table .col_6 .drawItem {
+	height: 1726px;
+}
+
+.drawDetalle table .col_6 .first {
+	height: 490px;
+}
+
+.doubles table .col_6 .first {
+	height: 905px;
+}
+
+.drawDetalle table .col_7 .drawItem {
+	height: 1918px;
+}
+
+.doubles table .col_7 .drawItem {
+	height: 3454px;
+}
+
+.drawDetalle table .col_7 .first {
+	height: 975px;
+}
+
+.doubles table .col_7 .first {
+	height: 1790px;
+}
+
+.drawDetalle table .col_8 .drawItem {
+	height: 3838px;
+}
+
+.doubles table .col_8 .drawItem {
+	height: 6912px;
+}
+
+.drawDetalle table .col_8 .first {
+	height: 1950px;
+}
+
+.doubles table .col_8 .first {
+	height: 3515px;
+}
+
+.drawDetalle table .col_9 .drawItem {
+	height: 5774px;
+}
+
+.doubles table .col_9 .drawItem {
+	height: 10396px;
+}
+
+.drawDetalle table .col_9 .first {
+	height: 2941px;
+}
+
+.doubles table .col_9 .first {
+	height: 5300px;
+}
+
+

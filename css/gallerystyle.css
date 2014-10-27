@@ -1,0 +1,5 @@
+#motioncontainer{width:600;height:64px;}
+#motioncontainer a img{border:0px solid #cccccc;}
+#motioncontainer a:hover img{border:0px solid navy;}
+#statusdiv{background-color:lightyellow;border:0px solid gray;padding:2px;position:absolute;left:0px;visibility:hidden;}
+#motioncontainer a:hover{color:red;}

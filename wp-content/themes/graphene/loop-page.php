@@ -10,7 +10,6 @@
 <h1 class="page-title">
 	<?php if ( get_the_title() == '' ) { _e( '(No title)', 'graphene' ); } else { the_title(); } ?>
 </h1>
-<hr>
 <?php else : ?>                
 <div id="post-<?php the_ID(); ?>" <?php post_class( 'clearfix post' ); ?>>
 	
@@ -35,7 +34,6 @@
 			<?php if ( get_the_title() == '' ) { _e( '(No title)', 'graphene' ); } else { the_title(); } ?>
 			<?php do_action( 'graphene_page_title' ); ?>
         </h1>
-	<hr>
 		
 		<?php /* Post meta */ ?>
 		<div class="post-meta clearfix">

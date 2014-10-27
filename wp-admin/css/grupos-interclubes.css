@@ -1,0 +1,56 @@
+div#panelGrupos{
+	display: block;
+	border: 1px solid #e5e5e5;
+	padding: 20px;
+}
+
+table.grupo{
+	min-width: 480px;
+	border: 1px solid #e5e5e5;
+	margin-bottom: 20px;
+	border-collapse: collapse; 
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #545454;
+	text-decoration: none;
+	text-align: center;
+}
+
+table.grupo thead th{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #006f95;
+}
+
+table.grupo td, table.grupo th{
+	padding: 10px;
+	border: 1px solid #e5e5e5;
+}
+
+table.grupo td.relleno{
+	background: #e5e5e5;
+}
+
+table.grupo tr:nth-child(1), table.grupo td:nth-child(3n+1){
+	font-weight: bold;
+}
+
+table.grupo td:nth-child(2){
+	text-align: left;
+}
+
+.mensajeGrupo{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #545454;
+	text-decoration: none;
+	text-align: center;
+}
+
+#tablaClasificacion{
+	overflow-x: auto;
+}
+

@@ -247,7 +247,7 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
 
         // Simply throwing our rendered gallery into a feed will most likely not work correctly.
         // The MediaRSS option in NextGEN is available as an alternative.
-        if(is_feed())
+        if (!C_NextGen_Settings::get_instance()->galleries_in_feeds && is_feed())
             return '';
 
 		if ($mode == null)
@@ -277,7 +277,8 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
 		elseif ($controller->cachable === FALSE) $lookup = FALSE;
 
 		// Enqueue any necessary static resources
-		$controller->enqueue_frontend_resources($displayed_gallery);
+        if (!defined('NGG_SKIP_LOAD_SCRIPTS') || !NGG_SKIP_LOAD_SCRIPTS)
+		    $controller->enqueue_frontend_resources($displayed_gallery);
 
 		// Try cache lookup, if we're to do so
 		$key = null;
@@ -305,8 +306,12 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
 				$settings->thumbEffect,
 				$settings->thumbCode,
 				$settings->galSort,
-				$settings->galSortDir
+				$settings->galSortDir,
 			));
+
+            // Any displayed gallery links on the home page will need to be regenerated if the permalink structure
+            // changes
+            if (is_home() OR is_front_page()) $key_params[] = get_option('permalink_structure');
 
 			// Try getting the rendered HTML from the cache
 			$key = $cache->generate_key($key_params);
@@ -315,7 +320,6 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
 			// Output debug messages
 			if ($html) $retval .= $this->debug_msg("HIT!");
 			else $retval .= $this->debug_msg("MISS!");
-
 
 			// TODO: This is hack. We need to figure out a more uniform way of detecting dynamic image urls
 			if (strpos($html, C_Photocrati_Settings_Manager::get_instance()->dynamic_thumbnail_slug.'/') !== FALSE) {
@@ -337,7 +341,7 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
 			$current_mode = $controller->get_render_mode();
 			$controller->set_render_mode($mode);
 			$html = $controller->index_action($displayed_gallery, TRUE);
-			if ($key != null) $cache->update($key, $html);
+			if ($key != null) $cache->update($key, $html, NGG_RENDERING_CACHE_TTL);
 			$controller->set_render_mode($current_mode);
 		}
 

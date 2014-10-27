@@ -4,7 +4,8 @@ Template Page for the album overview
 
 Follow variables are useable :
 
-	$album     	 : Contain information about the album
+    $album     	 : Contain information about the first album
+    $albums    	 : Contain information about all albums
 	$galleries   : Contain all galleries inside this album
 	$pagination  : Contain the pagination content
 
@@ -41,7 +42,7 @@ Follow variables are useable :
             </a>
         </h4>
 		<?php if (@$gallery->counter > 0) : ?>
-		<p><strong><?php echo $gallery->counter ?></strong>&nbsp;<?php _e('Photos', 'nggallery') ?></p>
+		<p class="ngg-album-gallery-image-counter"><strong><?php echo $gallery->counter ?></strong>&nbsp;<?php _e('Photos', 'nggallery') ?></p>
 		<?php endif; ?>
 	</div>
 

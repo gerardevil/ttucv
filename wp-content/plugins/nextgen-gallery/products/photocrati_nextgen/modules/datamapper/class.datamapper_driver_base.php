@@ -107,15 +107,18 @@ class Mixin_DataMapper_Driver_Base extends Mixin
 
 			if (strlen($value) > 1)
 			{
-				//Using json_decode here because PHP's unserialize is not Unicode safe
-				$retval = json_decode(base64_decode($retval), TRUE);
-
-				// JSON Decoding failed. Perhaps it's PHP serialized data?
-				if ($retval === NULL) {
-					$er = error_reporting(0);
-					$retval = unserialize($value);
-					error_reporting($er);
-				}
+                // We can't always rely on base64_decode() or json_decode() to return FALSE as their documentation
+                // claims so check if $retval begins with a: as that indicates we have a serialized PHP object.
+                if (strpos($retval, 'a:') === 0)
+                {
+                    $er = error_reporting(0);
+                    $retval = unserialize($value);
+                    error_reporting($er);
+                }
+                else {
+                    // We use json_decode() here because PHP's unserialize() is not Unicode safe.
+                    $retval = json_decode(base64_decode($retval), TRUE);
+                }
 			}
 		}
 
@@ -372,6 +375,9 @@ class Mixin_DataMapper_Driver_Base extends Mixin
 		// Cast columns to their appropriate data type
 		$this->cast_columns($stdObject);
 
+		// Strip slashes
+		$this->strip_slashes($stdObject);
+
 		// Unserialize columns
 		$this->unserialize_columns($stdObject);
 
@@ -380,6 +386,47 @@ class Mixin_DataMapper_Driver_Base extends Mixin
 
 		return $stdObject;
 	}
+
+
+	function strip_slashes($stdObject)
+	{
+		foreach (get_object_vars($stdObject) as $key => $value) {
+			if (is_string($value)) {
+				$stdObject->$key = str_replace("\\'", "'", str_replace('\"', '"', str_replace("\\\\", "\\", $value)));
+			}
+			elseif(is_object($value)) {
+				$stdObject->$key = $this->strip_slashes_deep($value);
+			}
+            elseif(is_array($value)) {
+                $stdObject->$key = $this->strip_slashes_deep($value);
+            }
+		}
+
+		return $stdObject;
+	}
+
+	function strip_slashes_deep($input)
+	{
+		$retval = $input;
+
+		if (is_object($input)) {
+			foreach (get_object_vars($input) as $key => $value) {
+				$retval->$key = $this->strip_slashes_deep($value);
+			}
+		}
+		elseif(is_array($input)) {
+			foreach ($input as $key => $value) {
+				$retval[$key] = $this->strip_slashes_deep($value);
+			}
+		}
+		elseif(is_string($input)) {
+			$retval = str_replace("\\'", "'", str_replace('\"', '"', str_replace("\\\\", "\\", $input)));
+
+		}
+
+		return $retval;
+	}
+
 
 	/**
 	 * Converts a stdObject entity to a model
@@ -536,28 +583,6 @@ class Mixin_DataMapper_Driver_Base extends Mixin
 		}
 	}
 
-    function scrub_result($result)
-    {
-        if (is_object($result))
-        {
-            $new_result = new stdClass();
-            foreach ($result as $key => $value) {
-                $new_value = $this->scrub_result($value);
-                $new_result->$key = $new_value;
-            }
-            return $new_result;
-        }
-        else if (is_array($result)) {
-            $new_array = array();
-            foreach ($result as $key => $value) {
-                $new_array[$key] = $this->scrub_result($value);
-            }
-            return $new_array;
-        } else {
-            return stripslashes($result);
-        }
-    }
-
 	function define_column($name, $type, $default_value=NULL)
 	{
 		$this->object->_columns[$name] = array(
@@ -575,9 +600,9 @@ class Mixin_DataMapper_Driver_Base extends Mixin
 	function cast_columns($entity)
 	{
 		foreach ($this->object->_columns as $key => $properties) {
-			$value = isset($entity->$key) ? $entity->$key : NULL;
+            $value = property_exists($entity, $key) ? $entity->$key : NULL;
 			$default_value = $properties['default_value'];
-			if ($value && $value != $default_value) {
+			if (!is_null($value) && $value !== $default_value) {
 				$column_type = $this->object->_columns[$key]['type'];
 				if (preg_match("/varchar|text/i", $column_type)) {
 					if (!is_array($value) && !is_object($value))
@@ -620,15 +645,16 @@ class C_DataMapper_Driver_Base extends C_Component
 		$this->add_mixin('Mixin_DataMapper_Driver_Base');
 		$this->implement('I_DataMapper_Driver');
 		$this->_object_name = $object_name;
-
-		if ($this->has_method('define_columns')) {
-			$this->define_columns();
-		}
 	}
 
 	function initialize()
 	{
 		parent::initialize();
+
+		if ($this->has_method('define_columns')) {
+			$this->define_columns();
+		}
+
 		$this->lookup_columns();
 	}
 

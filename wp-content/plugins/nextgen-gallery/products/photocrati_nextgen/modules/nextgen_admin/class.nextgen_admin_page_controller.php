@@ -97,10 +97,10 @@ class Mixin_NextGen_Admin_Page_Instance_Methods extends Mixin
 		wp_register_script('iris', $this->get_router()->get_url('/wp-admin/js/iris.min.js', FALSE, TRUE), array('jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch'));
 		wp_register_script('wp-color-picker', $this->get_router()->get_url('/wp-admin/js/color-picker.js', FALSE, TRUE), array('iris'));
 		wp_localize_script('wp-color-picker', 'wpColorPickerL10n', array(
-			'clear' => __( 'Clear' ),
-			'defaultString' => __( 'Default' ),
-			'pick' => __( 'Select Color' ),
-			'current' => __( 'Current Color' ),
+			'clear' => __('Clear', 'nggallery'),
+			'defaultString' => __('Default', 'nggallery'),
+			'pick' => __('Select Color', 'nggallery'),
+			'current' => __('Current Color', 'nggallery'),
 		));
 		wp_enqueue_script(
 			'nextgen_admin_page',
@@ -171,9 +171,8 @@ class Mixin_NextGen_Admin_Page_Instance_Methods extends Mixin
 
 	function get_success_message()
 	{
-		return "Saved successfully";
+		return __("Saved successfully", 'nggallery');
 	}
-
 
 	/**
 	 * Returns an accordion tab, encapsulating the form
@@ -241,13 +240,22 @@ class Mixin_NextGen_Admin_Page_Instance_Methods extends Mixin
 			// request
 			$tabs			= array();
 			$errors			= array();
-			$success		= $this->object->is_post_request() ?
-									$this->object->get_success_message() : '';
+			$action 		= $this->object->_get_action();
+			$success		= $this->param('message');
+			if ($success)	$success = $this->object->get_success_message();
+			else 			$success = $this->object->is_post_request() ?
+										$this->object->get_success_message() : '';
 
+			// First, process the Post request
+			if ($this->object->is_post_request() && $this->has_method($action)) {
+				$this->object->$action($this->object->param($this->context));
+			}
+
+			// Display and process all forms
 			foreach ($this->object->get_forms() as $form) {
+				$form->page = $this->object;
 				$form->enqueue_static_resources();
 				if ($this->object->is_post_request()) {
-					$action = $this->object->_get_action();
 					if ($form->has_method($action)) {
                         $form->$action($this->object->param($form->context));
 					}
@@ -272,7 +280,8 @@ class Mixin_NextGen_Admin_Page_Instance_Methods extends Mixin
 				'errors'			=>	$errors,
 				'success'			=>	$success,
 				'form_header'		=>  $token->get_form_html(),
-                'show_save_button'  =>  $this->object->show_save_button()
+                'show_save_button'  =>  $this->object->show_save_button(),
+				'model'				=>	$this->object->has_method('get_model') ? $this->get_model() : NULL
 			));
 		}
 

@@ -9,7 +9,7 @@ class A_Lightbox_Manager_Form extends Mixin
 
 	function get_title()
 	{
-		return 'Lightbox Effects';
+		return __('Lightbox Effects', 'nggallery');
 	}
 
 	function render()
@@ -21,12 +21,12 @@ class A_Lightbox_Manager_Form extends Mixin
         $sub_fields = array();
         $advanced_fields = array();
 
-        foreach ($form_manager->get_forms(NEXTGEN_LIGHTBOX_OPTIONS_SLUG, TRUE) as $form) {
+        foreach ($form_manager->get_forms(NGG_LIGHTBOX_OPTIONS_SLUG, TRUE) as $form) {
             $form->enqueue_static_resources();
             $sub_fields[$form->context] = $form->render(FALSE);
         }
 
-        foreach ($form_manager->get_forms(NEXTGEN_LIGHTBOX_ADVANCED_OPTIONS_SLUG, TRUE) as $form) {
+        foreach ($form_manager->get_forms(NGG_LIGHTBOX_ADVANCED_OPTIONS_SLUG, TRUE) as $form) {
             $form->enqueue_static_resources();
             $advanced_fields[$form->context] = $form->render(FALSE);
         }
@@ -35,7 +35,7 @@ class A_Lightbox_Manager_Form extends Mixin
 		return $this->render_partial(
             'photocrati-nextgen_other_options#lightbox_library_tab',
             array(
-                'lightbox_library_label' => _('What effect would you like to use?'),
+                'lightbox_library_label' => __('What effect would you like to use?', 'nggallery'),
                 'libs'       => $mapper->find_all(),
                 'id_field'   => $mapper->get_primary_key_column(),
                 'selected'   => $this->object->get_model()->thumbEffect,
@@ -71,7 +71,6 @@ class A_Lightbox_Manager_Form extends Mixin
 		                else {
 		                    $library->display_settings[$k] = $v;
 		                }
-
 		            }
 		            
 					$mapper->save($library);

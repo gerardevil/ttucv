@@ -104,6 +104,14 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
         return $retval;
     }
 
+    function convert_slashes($path)
+    {
+        $search = array('/', "\\");
+        $replace = array(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+
+        return str_replace($search, $replace, $path);
+    }
+
 
     function delete_directory($abspath)
     {
@@ -114,7 +122,7 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
             array_shift($files);
             array_shift($files);
             foreach ($files as $file) {
-                $file_abspath = path_join($abspath, $file);
+                $file_abspath = implode(DIRECTORY_SEPARATOR, array(rtrim($abspath, "/\\"), $file));
                 if (is_dir($file_abspath)) $this->object->delete_directory($file_abspath);
                 else unlink($file_abspath);
             }
@@ -163,7 +171,7 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
                 // Copy each image size
                 foreach ($this->object->get_image_sizes() as $size) {
                     $image_path = $this->object->get_image_abspath($image, $size);
-                    $dst = path_join($gallery_path, basename($image_path));
+                    $dst = implode(DIRECTORY_SEPARATOR, array($gallery_path, basename($image_path)));
                     $success = $move ? move($image_path, $dst) : copy($image_path, $dst);
                     if (!$success) $retval = FALSE;
                 }
@@ -219,15 +227,18 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
         if (FALSE == $gallery)
         {
             $gallerypath = C_NextGen_Settings::get_instance()->gallerypath;
-            $retval = path_join(WINABSPATH, $gallerypath);
-            $retval = path_join($retval, 'cache');
+            $retval = implode(DIRECTORY_SEPARATOR, array(
+               rtrim(C_Fs::get_instance()->get_document_root('gallery'), "/\\"),
+               rtrim($gallerypath, "/\\"),
+               'cache'
+            ));
         }
         else {
             if (is_numeric($gallery))
             {
                 $gallery = $this->object->_gallery_mapper->find($gallery);
             }
-            $retval = path_join($this->object->get_gallery_abspath($gallery), 'dynamic');
+            $retval = rtrim(implode(DIRECTORY_SEPARATOR, array($this->object->get_gallery_abspath($gallery), 'dynamic')), "/\\");
         }
 
         return $retval;
@@ -428,7 +439,15 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 	 */
 	function get_upload_relpath($gallery=FALSE)
 	{
-		return str_replace(ABSPATH, '', $this->object->get_upload_abspath($gallery));
+		$fs = C_Fs::get_instance();
+
+        $retval = str_replace(
+            $fs->get_document_root('gallery'),
+            '',
+            $this->object->get_upload_abspath($gallery)
+        );
+
+		return DIRECTORY_SEPARATOR.ltrim($retval, "/\\");
 	}
 
 	/**
@@ -442,6 +461,57 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 	{
 		return $this->object->copy_images($images, $gallery, $db, TRUE);
 	}
+
+    function is_image_file()
+    {
+        $retval = FALSE;
+
+        if ((isset($_FILES['file']) && $_FILES['file']['error'] == 0)) {
+            $file_info = $_FILES['file'];
+            $filename  = $_FILES['file']['tmp_name'];
+
+            if (isset($file_info['type'])) {
+                $type = strtolower($file_info['type']);;
+                $valid_types = array(
+                    'image/gif',
+                    'image/jpg',
+                    'image/jpeg',
+                    'image/pjpeg',
+                    'image/png',
+                );
+                $valid_regex = '/\.(jpg|jpeg|gif|png)$/';
+
+                // Is this a valid type?
+                if (in_array($type, $valid_types)) {
+
+                    // If we can, we'll verify the mime type
+                    if (function_exists('exif_imagetype')) {
+                        if (($image_type = @exif_imagetype($filename)) !== FALSE) {
+                            $retval = in_array(image_type_to_mime_type($image_type), $valid_types);
+                        }
+                    }
+
+                    else {
+                        $file_info = @getimagesize($filename);
+                        if (isset($file_info[2])) {
+                            $retval = in_array(image_type_to_mime_type($file_info[2]), $valid_types);
+                        }
+
+                        // We'll assume things are ok as there isn't much else we can do
+                        else $retval = TRUE;
+                    }
+                }
+
+                // Is this a valid extension?
+                // TODO: Should we remove this?
+                else if (strpos($type, 'octet-stream') !== FALSE && preg_match($valid_regex, $type)) {
+                    $retval = TRUE;
+                }
+            }
+        }
+
+        return $retval;
+    }
 
 
     function is_zip()
@@ -473,29 +543,64 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
     function upload_zip($gallery_id)
     {
         $memory_limit = intval(ini_get('memory_limit'));
-        if ($memory_limit < 256) @ini_set('memory_limit', '256M');
+        if (!extension_loaded('suhosin') && $memory_limit < 256) @ini_set('memory_limit', '256M');
 
         $retval = FALSE;
 
         if ($this->object->is_zip()) {
-            $zipfile    = $_FILES['file']['tmp_name'];
-            $dest_path  = path_join(get_temp_dir(), 'unpacked-'.basename($zipfile));
-            $fs         = $this->get_registry()->get_utility('I_Fs');
-
-            // Ensure that we truly have the gallery id
-            $gallery_id = $this->_get_gallery_id($gallery_id);
+            $fs = $this->get_registry()->get_utility('I_Fs');
 
             // Uses the WordPress ZIP abstraction API
-            wp_mkdir_p($dest_path);
             include_once($fs->join_paths(ABSPATH, 'wp-admin', 'includes', 'file.php'));
             WP_Filesystem();
+            
+            // Ensure that we truly have the gallery id
+            $gallery_id = $this->_get_gallery_id($gallery_id);
+            
+            $zipfile    = $_FILES['file']['tmp_name'];
+            $dest_path = implode(DIRECTORY_SEPARATOR, array(
+               rtrim(get_temp_dir(), "/\\"),
+               'unpacked-'.basename($zipfile)
+            ));
+
+            wp_mkdir_p($dest_path);
+            
             if ((unzip_file($zipfile, $dest_path) === TRUE)) {
-                $retval = $this->object->import_gallery_from_fs($dest_path, $gallery_id);
+            		$dest_dir = $dest_path . DIRECTORY_SEPARATOR;
+                $files = glob($dest_dir . '*');
+                $size = 0;
+                
+                foreach ($files as $file) {
+                	if (is_file($dest_dir . $file)) {
+                		$size += filesize($dest_dir . $file);
+                	}
+                }
+                
+                if ($size == 0) {
+            			$this->object->delete_directory($dest_path);
+            			
+									$destination = wp_upload_dir();
+									$destination_path = $destination['basedir'];
+						      $dest_path = implode(DIRECTORY_SEPARATOR, array(
+						         rtrim($destination_path, "/\\"),
+						         'unpacked-' . basename($zipfile)
+						      ));
+
+						      wp_mkdir_p($dest_path);
+						      
+            			if ((unzip_file($zipfile, $dest_path) === TRUE)) {
+                		$retval = $this->object->import_gallery_from_fs($dest_path, $gallery_id);
+            			}
+                }
+                else {
+                	$retval = $this->object->import_gallery_from_fs($dest_path, $gallery_id);
+                }
             }
+            
             $this->object->delete_directory($dest_path);
         }
 
-        @ini_set('memory_limit', $memory_limit.'M');
+        if (!extension_loaded('suhosin')) @ini_set('memory_limit', $memory_limit.'M');
 
         return $retval;
     }
@@ -521,11 +626,11 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 	 * @param type $filename specifies the name of the file
 	 * @return C_Image
 	 */
-	function upload_base64_image($gallery, $data, $filename=FALSE, $image_id=FALSE)
+    function upload_base64_image($gallery, $data, $filename=FALSE, $image_id=FALSE, $override=FALSE)
 	{
         $settings = C_NextGen_Settings::get_instance();
         $memory_limit = intval(ini_get('memory_limit'));
-        if ($memory_limit < 256) @ini_set('memory_limit', '256M');
+        if (!extension_loaded('suhosin') && $memory_limit < 256) @ini_set('memory_limit', '256M');
 
 		$retval		= NULL;
 		if (($gallery_id = $this->object->_get_gallery_id($gallery))) {
@@ -542,17 +647,40 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 			$upload_dir = $this->object->get_upload_abspath($gallery);
 
 			// Perhaps a filename was given instead of base64 data?
-			if ($data[0] == '/' && @file_exists($data)) {
+            if (preg_match("#/\\\\#", $data[0]) && @file_exists($data)) {
 				if (!$filename) $filename = basename($data);
 				$data = file_get_contents($data);
 			}
 
 			// Determine filenames
-			$filename = $filename ? sanitize_title_with_dashes($filename) : uniqid('nextgen-gallery');
+			$original_filename = $filename;
+			$filename = $filename ? sanitize_file_name($original_filename) : uniqid('nextgen-gallery');
 			if (preg_match("/\-(png|jpg|gif|jpeg)$/i", $filename, $match)) {
 				$filename = str_replace($match[0], '.'.$match[1], $filename);
 			}
-			$abs_filename = path_join($upload_dir, $filename);
+
+            $abs_filename = implode(DIRECTORY_SEPARATOR, array($upload_dir, $filename));
+
+            // Prevent duplicate filenames: check if the filename exists and
+            // begin appending '-i' until we find an open slot
+            if (!ini_get('safe_mode') && @file_exists($abs_filename) && !$override)
+            {
+                $file_exists = TRUE;
+                $i = 0;
+                do {
+                    $i++;
+                    $parts = explode('.', $filename);
+                    $extension = array_pop($parts);
+                    $new_filename = implode('.', $parts) . '-' . $i . '.' . $extension;
+                    $new_abs_filename = implode(DIRECTORY_SEPARATOR, array($upload_dir, $new_filename));
+                    if (!@file_exists($new_abs_filename))
+                    {
+                        $file_exists = FALSE;
+                        $filename = $new_filename;
+                        $abs_filename = $new_abs_filename;
+                    }
+                } while ($file_exists == TRUE);
+            }
 
 			// Create or retrieve the image object
 			$image	= NULL;
@@ -564,7 +692,7 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 			$retval	= $image;
 			
 			// Create or update the database record
-			$image->alttext		= sanitize_title_with_dashes(basename($filename, '.' . pathinfo($filename, PATHINFO_EXTENSION)));
+			$image->alttext		= basename($original_filename, '.' . pathinfo($original_filename, PATHINFO_EXTENSION));
 			$image->galleryid	= $this->object->_get_gallery_id($gallery);
 			$image->filename	= $filename;
 			$image->image_slug = nggdb::get_unique_slug( sanitize_title_with_dashes( $image->alttext ), 'image' );
@@ -643,7 +771,7 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 		}
 		else throw new E_EntityNotFoundException();
 
-        @ini_set('memory_limit', $memory_limit.'M');
+        if (!extension_loaded('suhosin')) @ini_set('memory_limit', $memory_limit.'M');
 
 		return $retval;
 	}
@@ -1216,18 +1344,20 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 			{
 				$destpath = $clone_path;
 				$thumbnail = new C_NggLegacy_Thumbnail($image_path, true);
+                if (!$thumbnail->error) {
+                    if ($crop) {
+                        $crop_area = $result['crop_area'];
+                        $crop_x = $crop_area['x'];
+                        $crop_y = $crop_area['y'];
+                        $crop_width = $crop_area['width'];
+                        $crop_height = $crop_area['height'];
 
-				if ($crop) {
-					$crop_area = $result['crop_area'];
-					$crop_x = $crop_area['x'];
-					$crop_y = $crop_area['y'];
-					$crop_width = $crop_area['width'];
-					$crop_height = $crop_area['height'];
+                        $thumbnail->crop($crop_x, $crop_y, $crop_width, $crop_height);
+                    }
 
-					$thumbnail->crop($crop_x, $crop_y, $crop_width, $crop_height);
-				}
-
-				$thumbnail->resize($width, $height);
+                    $thumbnail->resize($width, $height);
+                }
+                else $thumbnail = NULL;
 			}
 
 			// We successfully generated the thumbnail
@@ -1337,6 +1467,15 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 				}
 
 				$thumbnail->save($destpath, $quality);
+
+                // IF the original contained IPTC metadata we should attempt to copy it
+                if (isset($detailed_size['APP13']) && function_exists('iptcembed'))
+                {
+                    $metadata = @iptcembed($detailed_size['APP13'], $destpath);
+                    $fp = @fopen($destpath, 'wb');
+                    @fwrite($fp, $metadata);
+                    @fclose($fp);
+                }
 			}
 		}
 

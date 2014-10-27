@@ -1,0 +1,45 @@
+
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault "access plus 1 weeks"
+ExpiresByType text/css "access plus 2 weeks"
+ExpiresByType text/javascript "access plus 4 weeks"
+</IfModule>
+
+
+<ifModule mod_deflate.c>
+
+# TIPOS DE FICHEROS QUE SE COMPRIMEN
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/php
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE text/javascript
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+
+# NO USAR COMPRESIÓN EN NAVEGADORES QUE NO LO SOPORTAN
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+
+# CREAMOS UN LOG DE LAS COMPRESIONES
+#DeflateFilterNote Input instream
+#DeflateFilterNote Output outstream
+#DeflateFilterNote Ratio ratio
+#LogFormat ‘”%r” %{outstream}n/%{instream}n (%{ratio}n%%)’ deflate
+
+# NO COMPRIMIMOS IMÁGENES, FICHEROS COMPRIMIDOS Y PDFs
+SetOutputFilter DEFLATE
+SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ \
+no-gzip dont-vary
+SetEnvIfNoCase Request_URI \
+\.(?:exe|t?gz|zip|bz2|sit|rar)$ \
+no-gzip dont-vary
+SetEnvIfNoCase Request_URI \.pdf$ no-gzip dont-vary
+
+</ifModule>

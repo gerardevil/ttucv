@@ -2,10 +2,10 @@
 Theme Name: 	Graphene
 Theme URI: 		http://www.graphene-theme.com/
 Description: 	We believe that every theme should facilitate creative writing, not hinder it. We also believe that each site should have the opportunity to be unique. Since the theme's inception, we have received countless suggestions and requests on features that really matter. We listened, and we delivered. Here's a theme that's packed full of features that you need, yet far from being overwhelming. Here's a theme that's easy to use for beginners, yet well documented and powerful enough to be endlessly customisable to users with even only moderate technical skills. Here's a theme that's available in more than  30 languages and is backed with active community support, where questions, ideas and suggestions are always welcomed. And best of all, here's a theme that's completely free. Here's a theme that's yours to make it special.
-Version: 		1.9.2
+Version: 		1.9.3
 Author: 		Syahir Hakim
 Author URI: 	http://www.khairul-syahir.com/
-Tags: 			black, blue, white, one-column, two-columns, three-columns, right-sidebar, left-sidebar, fixed-width, custom-colors, custom-header, custom-background, custom-menu, editor-style, theme-options, threaded-comments, sticky-post, translation-ready, rtl-language-support, post-formats, featured-image-header, featured-images, full-width-template, microformats
+Tags: 			black, blue, white, one-column, two-columns, three-columns, right-sidebar, left-sidebar, fixed-layout, custom-colors, custom-header, custom-background, custom-menu, editor-style, theme-options, threaded-comments, sticky-post, translation-ready, rtl-language-support, post-formats, featured-image-header, featured-images, full-width-template, microformats
 Text Domain: 	Graphene
 License: 		GNU General Public License, Version 3 (or newer)
 License URI: 	http://www.gnu.org/licenses/gpl.html
@@ -471,12 +471,11 @@ textarea {
 -------------------------------------------------------------- */
 
 #top-bar {
-	background: url(images/sprite_h.png) left -294px repeat-x #eee;
-	border-bottom:1px solid #eee;
+	background: url(images/sprite_h.png) left -596px repeat-x #313130;
+	border-bottom:1px solid #222;
 	height: 54px;
 	position: relative;
 	z-index: 10;
-	box-shadow: none;
 }
 #profiles{
 	padding-top: 13px;
@@ -510,7 +509,6 @@ textarea {
 	float: right;
 	width: 23px;
 	height: 23px;
-	box-shadow: none;
 }
 #top_search button span {
 	display: none;
@@ -526,7 +524,7 @@ textarea {
 	height: 198px;
 	width: 100%;
 	position: relative;
-	/*overflow: hidden;*/
+	overflow: hidden;
 }
 .header-img {
 	position: absolute;
@@ -539,7 +537,6 @@ textarea {
 	letter-spacing: -1px;
 	position: absolute;
 	bottom: 30%;
-	font-weight: bold;
 }
 .header_title,
 .header_title a,
@@ -556,7 +553,6 @@ textarea {
 	top: 68%;
 	width: 852px;
 	font: normal 22px "Pontano Sans", arial, sans-serif;
-	font-weight: bold;
 }
 #header_img_link {
 	display: block;
@@ -637,7 +633,7 @@ textarea {
 
 /* Top level header menu, default state */
 #header-menu-wrap {
-	background: url(images/sprite_h.png) left -294px repeat-x #eee;
+	background: url(images/sprite_h.png) left -4px repeat-x #101010;
 	position: relative;
 }
 .have-secondary-menu #header-menu-wrap {
@@ -691,7 +687,6 @@ textarea {
 #header-menu > li.current-menu-item > a,
 #header-menu > li.current-menu-ancestor > a {
 	color: #000;
-	text-decoration: none;
 }
 #header-menu > li:hover > a > span,
 #header-menu > li.current-menu-item > a > span,
@@ -1078,7 +1073,6 @@ button:hover,
 	overflow: visible;
 	position: relative;
 	width: 100%;
-	border-radius: 10px;
 }
 .child-page {
 	background: #E9ECF5;

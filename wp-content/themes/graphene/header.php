@@ -16,6 +16,11 @@ global $graphene_settings;
     <title><?php wp_title( '' ); ?></title>
     <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" /> 
     <?php wp_head(); ?>
+
+	<link rel='stylesheet' id='fancybox-0-css'  href='https://ttucv-c9-gerardevil.c9.io/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/fancybox/jquery.fancybox-1.3.4.css?ver=4.0' type='text/css' media='all' />
+
+	<!--<script src="https://ttucv-c9-gerardevil.c9.io/wp-content/themes/graphene/js/googlemap.js?sensor=false&language=es&callback=cpm_init"></script>-->
+
 </head>
 <body <?php body_class(); ?>>
 

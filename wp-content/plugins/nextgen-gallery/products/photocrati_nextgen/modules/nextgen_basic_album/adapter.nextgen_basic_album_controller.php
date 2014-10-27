@@ -49,7 +49,8 @@ class A_NextGen_Basic_Album_Controller extends Mixin
                     'source'				=> 'galleries',
                     'container_ids'			=> array($gallery),
                     'display_type'			=> $display_settings['gallery_display_type'],
-					'original_display_type'	=> $displayed_gallery->display_type
+					'original_display_type'	=> $displayed_gallery->display_type,
+                    'original_settings'     => $display_settings
                 ),
                 $return
             );
@@ -77,7 +78,7 @@ class A_NextGen_Basic_Album_Controller extends Mixin
 		$this->albums = $displayed_gallery->get_albums();
 
         // None of the above: Display the main album. Get the settings required for display
-        $current_page = (int)$this->param('page', 1);
+        $current_page = (int)$this->param('nggpage', 1);
         $offset = $display_settings['galleries_per_page'] * ($current_page - 1);
         $entities = $displayed_gallery->get_included_entities($display_settings['galleries_per_page'], $offset);
 
@@ -114,10 +115,10 @@ class A_NextGen_Basic_Album_Controller extends Mixin
                 $params = $this->object->prepare_display_parameters($displayed_gallery, $params);
 
                 switch ($displayed_gallery->display_type) {
-                    case NEXTGEN_GALLERY_NEXTGEN_BASIC_COMPACT_ALBUM:
+                    case NGG_BASIC_COMPACT_ALBUM:
                         $template = 'compact';
                         break;
-                    case NEXTGEN_GALLERY_NEXTGEN_BASIC_EXTENDED_ALBUM:
+                    case NGG_BASIC_EXTENDED_ALBUM:
                         $template = 'extended';
                         break;
                 }
@@ -170,9 +171,9 @@ class A_NextGen_Basic_Album_Controller extends Mixin
             $image_gen_params = array(
                 'width'     => $displayed_gallery->display_settings['thumbnail_width'],
                 'height'    => $displayed_gallery->display_settings['thumbnail_height'],
-                'quality'   => $displayed_gallery->display_settings['thumbnail_quality'],
-                'crop'      => $displayed_gallery->display_settings['thumbnail_crop'],
-                'watermark' => $displayed_gallery->display_settings['thumbnail_watermark']
+                'quality'   => isset($displayed_gallery->display_settings['thumbnail_quality']) ? $displayed_gallery->display_settings['thumbnail_quality'] : 100,
+                'crop'      => isset($displayed_gallery->display_settings['thumbnail_crop']) ? $displayed_gallery->display_settings['thumbnail_crop'] : NULL,
+                'watermark' => isset($displayed_gallery->display_settings['thumbnail_watermark']) ? $displayed_gallery->display_settings['thumbnail_watermark'] : NULL
             );
         }
 
@@ -202,7 +203,7 @@ class A_NextGen_Basic_Album_Controller extends Mixin
 			if ($gallery->is_album)
             {
                 if ($gallery->pageid > 0)
-                    $gallery->pagelink = get_post_permalink($gallery->pageid);
+                    $gallery->pagelink = @get_page_link($gallery->pageid);
                 else {
                     $gallery->pagelink = $this->object->set_param_for(
                         $this->object->get_routed_url(TRUE),
@@ -216,7 +217,7 @@ class A_NextGen_Basic_Album_Controller extends Mixin
 			// /nggallery/album--slug/gallery--slug
 			else {
                 if ($gallery->pageid > 0) {
-					$gallery->pagelink = @get_post_permalink($gallery->pageid);
+					$gallery->pagelink = @get_page_link($gallery->pageid);
 				}
                 if (empty($gallery->pagelink)) {
                     $pagelink = $this->object->get_routed_url(TRUE);
@@ -244,15 +245,12 @@ class A_NextGen_Basic_Album_Controller extends Mixin
                 }
 			}
 
-			// The router by default will generate param segments that look like,
-			// /gallery--foobar. We need to convert these to the admittingly
-			// nicer links that ngglegacy uses
-            if ($gallery->pageid <= 0)
-                $gallery->pagelink = $this->object->prettify_pagelink($gallery->pagelink);
-
             // Let plugins modify the gallery
             $gallery = apply_filters('ngg_album_galleryobject', $gallery);
         }
+
+        $params['album'] = reset($this->albums);
+        $params['albums'] = $this->albums;
 
         // Clean up
         unset($storage);
@@ -262,24 +260,6 @@ class A_NextGen_Basic_Album_Controller extends Mixin
 
         return $params;
     }
-
-
-	function prettify_pagelink($pagelink)
-	{
-		$param_separator = C_NextGen_Settings::get_instance()->get('router_param_separator');
-
-		$regex = implode('', array(
-			'#',
-			'/(gallery|album)',
-			preg_quote($param_separator, '#'),
-			'([^/?]+)',
-			'#'
-		));
-		
-		$pagelink = preg_replace($regex, '/\2', $pagelink);
-		
-		return $pagelink;
-	}
 
 
     function _get_js_lib_url()

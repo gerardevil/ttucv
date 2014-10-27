@@ -67,11 +67,11 @@ class Mixin_Attach_To_Post_Display_Tab extends Mixin
 		$order_2 = $type_2->view_order;
 		
 		if ($order_1 == null) {
-			$order_1 = NEXTGEN_DISPLAY_PRIORITY_BASE;
+			$order_1 = NGG_DISPLAY_PRIORITY_BASE;
 		}
 		
 		if ($order_2 == null) {
-			$order_2 = NEXTGEN_DISPLAY_PRIORITY_BASE;
+			$order_2 = NGG_DISPLAY_PRIORITY_BASE;
 		}
 		
 		if ($order_1 > $order_2) {
@@ -94,7 +94,7 @@ class Mixin_Attach_To_Post_Display_Tab extends Mixin
 		// The ATP requires more memmory than some applications, somewhere around 60MB.
 		// Because it's such an important feature of NextGEN Gallery, we temporarily disable
 		// any memory limits
-		@ini_set('memory_limit', -1);
+        if (!extension_loaded('suhosin')) @ini_set('memory_limit', -1);
 
 		return array(
 			$this->object->_render_display_types_tab(),
@@ -112,7 +112,7 @@ class Mixin_Attach_To_Post_Display_Tab extends Mixin
 	{
 		return $this->object->render_partial('photocrati-attach_to_post#accordion_tab', array(
 			'id'			=> 'source_tab',
-			'title'		=>	_('What would you like to display?'),
+			'title'		=>	__('What would you like to display?', 'nggallery'),
 			'content'	=>	$this->object->_render_display_source_tab_contents()
 		), TRUE);
 	}
@@ -136,7 +136,7 @@ class Mixin_Attach_To_Post_Display_Tab extends Mixin
 	{
 		return $this->object->render_partial('photocrati-attach_to_post#accordion_tab', array(
 			'id'			=> 'display_type_tab',
-			'title'		=>	_('Select a display type'),
+			'title'		=>	__('Select a display type', 'nggallery'),
 			'content'	=>	$this->object->_render_display_type_tab_contents()
 		), TRUE);
 	}
@@ -159,7 +159,7 @@ class Mixin_Attach_To_Post_Display_Tab extends Mixin
 	{
 		return $this->object->render_partial('photocrati-attach_to_post#accordion_tab', array(
 			'id'			=> 'display_settings_tab',
-			'title'		=>	_('Customize the display settings'),
+			'title'		=>	__('Customize the display settings', 'nggallery'),
 			'content'	=>	$this->object->_render_display_settings_contents()
 		), TRUE);
 	}
@@ -209,7 +209,7 @@ class Mixin_Attach_To_Post_Display_Tab extends Mixin
 		// Get all display setting forms
         $form_manager = C_Form_Manager::get_instance();
 		$forms		  = $form_manager->get_forms(
-			NEXTGEN_DISPLAY_SETTINGS_SLUG, TRUE
+			NGG_DISPLAY_SETTINGS_SLUG, TRUE
 		);
 
 		// Display each form
@@ -250,7 +250,7 @@ class Mixin_Attach_To_Post_Display_Tab extends Mixin
 		$css_class = $this->object->_get_selected_display_type_name() ?
 			'display_settings_form hidden' : 'display_settings_form';
 		$retval[] = $this->object->render_partial('photocrati-attach_to_post#no_display_type_selected', array(
-			'no_display_type_selected'	=>	_('No display type selected'),
+			'no_display_type_selected'	=>	__('No display type selected', 'nggallery'),
 			'css_class'					=>	$css_class
 
 		), TRUE);
@@ -268,7 +268,7 @@ class Mixin_Attach_To_Post_Display_Tab extends Mixin
 	{
 		return $this->object->render_partial('photocrati-attach_to_post#accordion_tab', array(
 			'id'			=> 'preview_tab',
-			'title'		=>	_('Sort or Exclude Images'),
+			'title'		=>	__('Sort or Exclude Images', 'nggallery'),
 			'content'	=>	$this->object->_render_preview_tab_contents()
 		), TRUE);
 	}
