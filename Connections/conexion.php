@@ -2,6 +2,7 @@
 # FileName="Connection_php_mysql.htm"
 # Type="MYSQL"
 # HTTP="true"
+<<<<<<< HEAD
 $hostname_conexion = "localhost";
 $database_conexion = "ttucv";
 $username_conexion = "root";
