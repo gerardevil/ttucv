@@ -2,10 +2,10 @@
 # FileName="Connection_php_mysql.htm"
 # Type="MYSQL"
 # HTTP="true"
-$hostname_conexion = "209.200.229.220";
-$database_conexion = "dxtev0_website";
-$username_conexion = "dxtev0_eventos";
-$password_conexion = "Ev2012Os";
+$hostname_conexion = "localhost";
+$database_conexion = "ttucv";
+$username_conexion = "root";
+$password_conexion = "root";
 
 $hostname_conexion = getenv('IP');
 $database_conexion = "c9";
