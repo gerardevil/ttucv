@@ -1,0 +1,26 @@
+TRUNCATE TABLE estados;
+
+INSERT INTO estados(edo_id, edo_nombre) VALUES (1,'Amazonas');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (2,'Anzoátegui');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (3,'Apure');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (4,'Aragua');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (5,'Barinas');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (6,'Bolívar');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (7,'Carabobo');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (8,'Cojedes');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (9,'Delta Amacuro');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (10,'Distrito Capital');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (11,'Falcón');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (12,'Guárico');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (13,'Lara');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (14,'Mérida');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (15,'Miranda');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (16,'Monagas');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (17,'Nueva Esparta');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (18,'Portuguesa');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (19,'Sucre');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (20,'Tachira');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (21,'Trujillo');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (22,'Vargas');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (23,'Yaracuy');
+INSERT INTO estados(edo_id, edo_nombre) VALUES (24,'Zulia');

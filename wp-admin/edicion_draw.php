@@ -217,7 +217,7 @@ $vdeporte="1";
 			
 			
 			
-			if((i-parseInt($('#rondaIni').val())+1) == 2){//solo se coloca la fecha de lo juegos de la primera ronda (es 2 porque la fecha de los juegos de la primera ronda se especifican en la sección de ganador de la segunda)
+			if((i-parseInt($('#rondaIni').val())+1) == 2){//solo se coloca la fecha de lo juegos de la primera ronda (es 2 porque la fecha de los juegos de la primera ronda se especifican en la secciï¿½n de ganador de la segunda)
 				$('#drawDetalleSeccion table tbody tr td.'+col_i+' div.draw:last-child div.drawItem:last-child').append("\n<div class=\"scores\">\n");
 				$('#drawDetalleSeccion table tbody tr td.'+col_i+' div.draw:last-child div.drawItem:last-child div.scores').append("<a class=\"fancybox.ajax data\" href=\"mod_draws_data.php\" fecha=\""+$('#fechaIniModa').attr('larga')+"\">"+$('#fechaIniModa').attr('corta')+"</a>");
 			}else if((i-parseInt($('#rondaIni').val())+1) > 2){
@@ -245,7 +245,7 @@ $vdeporte="1";
 					$('#drawDetalleSeccion table tbody tr td.'+col_i+' div.draw:last-child div.drawItem:last-child div.jugadoresContenedor').append("\n<div class=\"jugador\">\n");
 				//}
 				
-				if((i-parseInt($('#rondaIni').val())+1) == 2){//solo se coloca la fecha de lo juegos de la primera ronda(es 2 porque la fecha de los juegos de la primera ronda se especifican en la sección de ganador de la segunda)
+				if((i-parseInt($('#rondaIni').val())+1) == 2){//solo se coloca la fecha de lo juegos de la primera ronda(es 2 porque la fecha de los juegos de la primera ronda se especifican en la secciï¿½n de ganador de la segunda)
 					$('#drawDetalleSeccion table tbody tr td.'+col_i+' div.draw:last-child div.drawItem:last-child').append("\n<div class=\"scores\">\n");
 					$('#drawDetalleSeccion table tbody tr td.'+col_i+' div.draw:last-child div.drawItem:last-child div.scores').append("<a class=\"fancybox.ajax data\" href=\"mod_draws_data.php\" fecha=\""+$('#fechaIniModa').attr('larga')+"\">"+$('#fechaIniModa').attr('corta')+"</a>");
 				}else if((i-parseInt($('#rondaIni').val())+1) > 2){
@@ -647,14 +647,14 @@ $vdeporte="1";
 										."</a>\n";
 										
 									if ($_GET['evmo_id']<>"") {
-										echo "\n<a id=\"inscripciones\" href=\"#\" onClick=\"return ir_lista_inscritos()\">"
+										/*echo "\n<a id=\"inscripciones\" href=\"#\" onClick=\"return ir_lista_inscritos()\">"
 												."<img src=\"../art/boton_lista_inscritos.png\" width=\"150\" height=\"35\">"
 											."</a>\n";
 											
 										echo "\n<a id=\"puntajes\" class=\"fancybox.ajax\" href=\"../mod_draws_puntos.php?evmo_id=".$_GET['evmo_id']."\">"
 											."<img src=\"../art/boton_puntajes.png\" width=\"111\" height=\"35\">"
 										."</a>\n";
-										
+										*/
 									}
 									
 								//}

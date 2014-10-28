@@ -786,7 +786,7 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 					 $(this).children("td").each(function (col) {
 
 						switch(col){
-							case 0: fila.push($(this).html()); break; //fecha de la inscripción
+							case 0: fila.push($(this).html()); break; //fecha de la inscripciï¿½n
 							case 1: fila.push($(this).children().html().substr(0,$(this).children().html().indexOf("-")-1)); break; // cedula jugador 1
 							case 2: fila.push($(this).html()); break; // email jugador 1
 							case 3: 
@@ -935,8 +935,10 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 		<li><a href="#info">Informaci&oacute;n del Evento</a></li>
 		<li><a href="#moda">Modalidades y Premios</a></li>
 		<li><a href="#patro">Patrocinantes</a></li>
-		<li><a href="#draws">Draws</a></li>
 		<li><a href="#inscripcion">Inscripciones</a></li>
+		<li><a href="#grupos">Grupos</a></li>
+		<li><a href="#draws">Draws</a></li>
+		
 	</ul>
 	<div id="info">
 		<table width="640" border="0" cellpadding="0" cellspacing="0" class="textogris11b">
@@ -1189,6 +1191,8 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 				</td></tr>
 			</table>
 	</div>
+	
+	<div id="grupos"></div>
 	
 </div>
 
