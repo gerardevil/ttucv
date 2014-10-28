@@ -233,25 +233,25 @@ $_wp_last_utility_menu = 80; // The index of the last top-level menu in the util
 
 	$menu[84] = array( '', 'read', 'separator2', '', 'wp-menu-separator' );	
 		
-	$menu[85] = array( __('Eventos'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Eventos', '', 'menu-top menu-icon-tools', 'menu-eventos', 'div' );
-		$submenu['dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Eventos'][10] = array(_x('Eventos', 'settings screen'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Eventos');
-		$submenu['dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Eventos'][15] = array(__('Jugadores'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_jugadores.php&titulo=Gestionar Jugadores');
-		$submenu['dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Eventos'][20] = array(__('Clubes'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_clubes.php&titulo=Gestionar Clubes');
-		$submenu['dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Eventos'][25] = array(__('Modalidades'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_modalidades.php&titulo=Gestionar Modalidades');
+	$menu[85] = array( __('Torneos'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Torneos', '', 'menu-top menu-icon-users', 'menu-eventos', 'dashicons-admin-users' );
+		$submenu['dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Torneos'][10] = array(_x('Torneos', 'settings screen'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Torneos');
+		$submenu['dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Torneos'][15] = array(__('Jugadores'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_jugadores.php&titulo=Gestionar Jugadores');
+		$submenu['dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Torneos'][20] = array(__('Clubes'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_clubes.php&titulo=Gestionar Clubes');
+		$submenu['dxtadmin.php?modulo=vista/mod_eventos.php&titulo=Gestionar Torneos'][25] = array(__('Modalidades'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_modalidades.php&titulo=Gestionar Modalidades');
 
-	$menu[86] = array( __('Interclubes'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_interclubes_liga.php&titulo=Gestionar Interclubes', '', 'menu-top menu-icon-tools', 'menu-interclubes', 'div' );
+	/*$menu[86] = array( __('Interclubes'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_interclubes_liga.php&titulo=Gestionar Interclubes', '', 'menu-top menu-icon-tools', 'menu-interclubes', 'div' );
 		$submenu['dxtadmin.php?modulo=vista/mod_interclubes_liga.php&titulo=Gestionar Interclubes'][10] = array(_x('Configurar Liga', 'settings screen'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_interclubes_liga.php&titulo=Gestionar Interclubes');
 		$submenu['dxtadmin.php?modulo=vista/mod_interclubes_liga.php&titulo=Gestionar Interclubes'][15] = array(__('Configurar Categor&iacute;as'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_interclubes_categoria.php&titulo=Gestionar Categor&iacute;a');
 		$submenu['dxtadmin.php?modulo=vista/mod_interclubes_liga.php&titulo=Gestionar Interclubes'][20] = array(__('Jornadas Interclubes'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_calendario.php&titulo=Gestionar Jornadas');
 		$submenu['dxtadmin.php?modulo=vista/mod_interclubes_liga.php&titulo=Gestionar Interclubes'][25] = array(__('Lista Jugadores'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_equipos_jugadores.php&titulo=Gestionar Lista de Jugadores');	
 		$submenu['dxtadmin.php?modulo=vista/mod_interclubes_liga.php&titulo=Gestionar Interclubes'][30] = array(__('Banner'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_banner_interclubes.php&titulo=Gestionar Banner Interclubes');
-
-	$menu[87] = array( __('Patrocinantes'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_patrocinantes.php&titulo=Gestionar Patrocinantes', '', 'menu-top menu-icon-tools', 'menu-patrocinantes', 'div' );	
+	*/
+	$menu[87] = array( __('Patrocinantes'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_patrocinantes.php&titulo=Gestionar Patrocinantes', '', 'menu-top menu-icon-page', 'menu-patrocinantes', 'dashicons-admin-page' );	
 		
-	$menu[88] = array( __('Ranking'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_rankings.php&titulo=Gestionar Ranking', '', 'menu-top menu-icon-tools', 'menu-ranking', 'div' );
+	$menu[88] = array( __('Ranking'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_rankings.php&titulo=Gestionar Ranking', '', 'menu-top menu-icon-settings', 'menu-ranking', 'dashicons-admin-settings' );
 		$submenu['dxtadmin.php?modulo=vista/mod_rankings.php&titulo=Gestionar Ranking'][10] = array(_x('Configurar Ranking', 'settings screen'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_rankings.php&titulo=Gestionar Ranking');
 		$submenu['dxtadmin.php?modulo=vista/mod_rankings.php&titulo=Gestionar Ranking'][15] = array(__('Configurar Rating'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_rating_config.php&titulo=Gestionar Rating');
-
+	/*
 	$menu[89] = array( __('Medios DxT'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_medios.php&titulo=Gestionar Medios DxT', '', 'menu-top menu-icon-media', 'menu-medios', 'div' );
 		$submenu['dxtadmin.php?modulo=vista/mod_medios.php&titulo=Gestionar Medios DxT'][10] = array(__('Galer&iacute;as'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_galerias.php&titulo=Gestionar Galer&iacute;as');
 		$submenu['dxtadmin.php?modulo=vista/mod_medios.php&titulo=Gestionar Medios DxT'][15] = array(__('Videos'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_videos.php&titulo=Gestionar Videos');
@@ -266,7 +266,7 @@ $_wp_last_utility_menu = 80; // The index of the last top-level menu in the util
 		$submenu['dxtadmin.php?modulo=vista/mod_configuraciones.php&titulo=Gestionar Configuraciones'][20] = array(__('Jugadores'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_jugadores.php&titulo=Gestionar Jugadores');
 		$submenu['dxtadmin.php?modulo=vista/mod_configuraciones.php&titulo=Gestionar Configuraciones'][25] = array(__('Clubes'), 'manage_options', 'dxtadmin.php?modulo=vista/mod_clubes.php&titulo=Gestionar Clubes');
 
-		
+	*/	
 	$_wp_last_utility_menu = 92; // The index of the last top-level menu in the utility menu group
 
 $menu[99] = array( '', 'read', 'separator-last', '', 'wp-menu-separator' );
