@@ -94,10 +94,12 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 
 <script>
 
+	var moda = null;
+
 	function seleccionar_by_php(){
 		
 		var evento = "<?php echo $_GET['even_id']; ?>";
-		var moda = "<?php echo $_GET['evmo_id']; ?>";
+		moda = "<?php echo $_GET['evmo_id']; ?>";
 		var opcion = "<?php echo $_GET['opcion']; ?>";
 		
 		//alert("evento: "+evento+ "\nmoda: "+moda+ "\nopcion: "+opcion);
@@ -362,6 +364,8 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 		document.getElementById('draws').innerHTML = "";
 		
 		$('#modaInscripcion').html('<option></option>');
+		$('#modaGrupos').html('<option></option>');
+		limpiarGrupos();
 
 	}
 	
@@ -495,7 +499,7 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 								
 								
 				$('#modaInscripcion').append('<option value="'+modalidades[i].evmo_id+'">'+modalidades[i].moda_nombre+'</option>');
-								
+				$('#modaGrupos').append('<option value="'+modalidades[i].evmo_id+'">'+modalidades[i].moda_nombre+'</option>');				
 			}
 			
 			for(var i=0;i<patrocinantes.length;i++){
@@ -742,7 +746,6 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 				}else if(inscripciones[i].inpa_estatus2 == 'E'){
 				
 					estatusPago += '<a href="'+rutaPago+'"  title="En proceso de pago" class="fancybox.ajax pago"><img src="'+getHost()+'/art/monedas16x16.png"></a>';
-				
 				}
 				
 				
@@ -762,7 +765,13 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 			}
 			
 			pintar_filas();
-			$("#htmlgridInsc tbody tr td a.textogris11b").fancybox();
+			$("#htmlgridInsc tbody tr td a.textogris11b").fancybox({
+													    'width' : 400,
+													    'height' : 540,
+														'autoScale' : false,       
+													    'autoSize' :   false,         
+													    'autoDimensions' : false
+			});
 			$("#htmlgridInsc tbody tr td a.textogris11b").click(function() {
 				elementoSel = $(this);
 			});
@@ -861,7 +870,14 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 		
 		$('#htmlgridInsc tbody').prepend(fila);
 		
-		$("#htmlgridInsc tbody tr td a.textogris11b").fancybox();
+		$("#htmlgridInsc tbody tr td a.textogris11b").fancybox({
+													    'width' : 400,
+													    'height' : 540,
+														'autoScale' : false,       
+													    'autoSize' :   false,         
+													    'autoDimensions' : false
+			
+		});
 		$("#htmlgridInsc tbody tr td a.textogris11b").click(function() {
 			elementoSel = $(this);
 		});
@@ -873,6 +889,228 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 	
 	
 	seleccionar_by_php();
+	
+	
+	function limpiarGrupos(){
+		$('#panelGrupos').html('<p class="mensajeGrupo">No se han registrado grupos para el torneo</p>');
+		$('#nro_equipos_x_grupos').removeAttr('disabled');
+	}
+	
+	function inicializar_drag_and_drop(){
+
+		$(".jugador").click(function() {
+			elementoSel = $(this);
+		});
+		
+		try{
+		
+			$(".jugador").fancybox();
+			
+			$(".jugador").each(function( index ) {
+				$(this).draggable({ revert: true , helper: "clone" });
+			});
+			
+			$(".jugador").each(function( index ) {
+				$(this).droppable({
+					drop: function( event, ui ) {
+					
+						var equipoTemp = $(this).clone();
+						$(this).parent().html(ui.draggable.clone());
+						ui.draggable.parent().html(equipoTemp);
+						
+						inicializar_drag_and_drop();
+					
+					}
+				});
+			});
+			
+		}catch(ex){
+			console.error('No se pudo inicializar el drag and drop');
+		}
+		
+		
+	}
+	
+	function agregarGrupo(interId, cantEquiposByGrupo, grupoId, grupoNombre, jugadores){
+		
+		var grupo = '<table class="grupo" grupoId="'+grupoId+'"><thead><tr><th colspan="'+(cantEquiposByGrupo+3)+'">'+grupoNombre+'</th></tr></thead>';
+		grupo += '<tr><td></td><td>Nombre</td>';
+		
+		for(j=1;j<=cantEquiposByGrupo;j++){
+			grupo += '<td>'+j+'</td>';
+		}
+	
+		grupo += '<td>Ptos</td></tr>';
+
+		for(j=1;j<=cantEquiposByGrupo;j++){
+			
+			if(jugadores != null && jugadores[j-1] != null){
+			
+				grupo += '<tr><td>'+j+'</td><td> <a href="mod_grupo_jugador.php?evmo_id='+interId+'" class="fancybox.ajax jugador" jugaId="'+jugadores[j-1].juga_id+'"> '+jugadores[j-1].juga_nombre+'</a></td>';
+			
+			}else{
+			
+				grupo += '<tr><td>'+j+'</td><td> <a href="mod_grupo_jugador.php?evmo_id='+interId+'" class="fancybox.ajax jugador"> Jugador '+j+'</a></td>';
+			
+			}
+			
+			for(k=1;k<=cantEquiposByGrupo;k++){
+				grupo += '<td' + (j==k ? ' class="relleno"' : '') + '></td>';
+			}
+			
+			grupo += '<td>0</td></tr>';
+		}
+		
+		grupo += '</table>';
+		
+		$('#panelGrupos').append(grupo);
+		
+		
+	}
+	
+	function generarGrupos(){
+		
+		var interId = $('#modaGrupos').val();
+		var cantEquiposByGrupo = parseInt($('#nro_equipos_x_grupos').val());
+		var cantGrupos = parseInt($('#nro_grupos').val());
+		
+		if(interId != ''){
+			if(confirm('Esto eliminar� los grupos ya cargados. \u00BFDeseas hacerlo de todas formas? ')){
+				$('#panelGrupos').html('');
+				
+				for(i=1;i<=cantGrupos;i++){
+					
+					agregarGrupo(interId, cantEquiposByGrupo, '', 'Grupo '+i, null);
+					
+				}
+				
+				inicializar_drag_and_drop();
+			}
+		}
+	}
+	
+	function cambioEquiposByGrupos(){
+	
+		$('#msg_nro_equipos_x_grupos').html('');
+		
+		if($('#modaGrupos').val() != ''){
+		
+			var cantEquipos = parseInt($('#nro_equipos').val());
+			var cantEquiposByGrupo = parseInt($('#nro_equipos_x_grupos').val());
+			
+			if(cantEquipos != '' && cantEquiposByGrupo != ''){
+				
+				if(cantEquiposByGrupo > 2 && cantEquiposByGrupo <= cantEquipos){
+					cantGrupos = cantEquipos/cantEquiposByGrupo;
+					
+					if(cantGrupos > parseInt(cantGrupos)) cantGrupos = cantGrupos + 1;
+					
+					$('#nro_grupos').val(parseInt(cantGrupos));
+					
+				}else{
+					$('#msg_nro_equipos_x_grupos').html('Debe ser minimo 3 y maximo '+cantEquipos);
+					$('#nro_grupos').val(1);
+				}
+			
+			}
+			
+		}else{
+			$('#msg_nro_equipos_x_grupos').html('Debe seleccionar un torneo previamente cargado');
+		}
+	
+	}
+	
+	function cargarCantEquipos(){
+	
+		inter_id = $('#modaGrupos').val();
+	
+		if(inter_id != ''){
+			
+			var param = 'opcion=consultaAll&evmo_id=' + inter_id + '&estatus=A';
+			
+			$.ajax({  
+			 type: 'GET',  
+			 url: 'control/ctrl_inscripcion.php',
+			 dataType: 'json',
+			 data: param,
+			 success: function(arrayDeObjetos){
+			 
+					try{
+						cantidad = arrayDeObjetos.length;
+						$('#nro_equipos').val(cantidad);
+						cambioEquiposByGrupos();
+						moda = inter_id;
+						
+					}catch(ex){
+						//$('#error_carga_info').html('No se pudo cargar su informaci&oacute;n, actualicela antes de realizar la inscripci&oacute;n');
+					}
+		      }  
+			});
+		
+		}
+		
+	}
+	
+		function guardarGrupos(){
+	
+		if (confirm('\u00BFDeseas guardar los grupos del torneo? ')) {
+		
+			var form =  document.forms.formulario;
+			
+			var arrayGrupos = new Array();
+			
+			$('.grupo').each(function (index) {
+			
+				var grupo = new Array();
+				grupo[0] = $(this).attr('grupoId');
+				grupo[1] = $(this).find('th').html();
+			
+				var arrayJugadores = new Array();
+			
+				$(this).find('.jugador').each(function (index2) {
+					var jugador = new Array();
+					jugador.push($(this).attr('jugaId'))
+					jugador.push($(this).attr('jugaId2'))
+					jugador.push($(this).attr('grju_id'))
+
+					arrayJugadores.push(jugador);
+					
+				});
+				
+				grupo[2] = arrayJugadores;
+				arrayGrupos.push(grupo);
+				
+			});
+			
+			form.datosGrupos.value = JSON.stringify(arrayGrupos);
+			form.opcion.value = 'guardar';
+			
+			$('#panelprincipal').hideLoading();	
+			$('#panelprincipal').showLoading();	
+			
+			$.ajax({  
+			 type: 'POST',  
+			 url: 'control/ctrl_grupos_jugadores.php',
+			 //dataType: 'json',
+			 data: $(form).serialize(),
+			 //async: false
+			 success: function(data){
+
+				$('#mensajes').html(data);
+				 //cargarGrupos();
+			 },
+			 complete: function(){
+			 
+				$('#panelprincipal').hideLoading();	
+			 
+			 } 
+			});
+			
+		}
+		
+		return false;
+	
+	}
 	
 </script>
 
@@ -1192,7 +1430,40 @@ if ($_GET['depo_id']<>"" && $_GET['even_id']<>""){
 			</table>
 	</div>
 	
-	<div id="grupos"></div>
+	<div id="grupos">
+		
+		<link href="css/calendario-interclubes.css" rel="stylesheet" type="text/css" />
+		<link href="css/grupos-interclubes.css" rel="stylesheet" type="text/css" />
+	
+		<label for="modaGrupos" class="textogris11b">Modalidad</label><br>
+		<select name="modaGrupos" class="textonegro11r" id="modaGrupos" onChange="cargarCantEquipos();cargarGrupos();">
+			<option></option>
+		</select>
+		<br>
+	
+		<label for="nro_equipos" class="textogris11b">Nro de Jugadores</label><br>
+		<input type="number" id="nro_equipos" name="nro_equipos" size="20" disabled/>
+		<span id="msg_nro_equipos" class="error"></span>
+		<br>
+		
+		<label for="nro_equipos_x_grupos" class="textogris11b">Jugadores por grupos</label><br>
+		<input type="number" id="nro_equipos_x_grupos" name="nro_equipos_x_grupos" size="20" onChange="cambioEquiposByGrupos();generarGrupos();"/>
+		<span id="msg_nro_equipos_x_grupos" class="error"></span>
+		<br>
+		
+		<label for="nro_grupos" class="textogris11b">Nro de Grupos</label><br>
+		<input type="number" id="nro_grupos" name="nro_grupos" size="20" disabled/>
+		<span id="msg_nro_grupos" class="error"></span>
+		<br>
+		<a href="#" onClick="guardarGrupos()"><img src="../art/boton_guardar.png"></a>
+		<br>
+	
+		<input type="hidden" id="datosGrupos" name="datosGrupos" value="">
+		<div id="panelGrupos">
+		</div>
+
+		
+	</div>
 	
 </div>
 

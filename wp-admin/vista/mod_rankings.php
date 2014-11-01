@@ -27,6 +27,10 @@ require_once("../modelo/modalidades.php");
 
 <script>
 
+	$(function() {
+		// setup ul.tabs to work as tabs for each div directly under div.panes
+		$("#tabs").tabs();
+	});
 	
 	//window.onload = function() {
 	
@@ -816,11 +820,6 @@ require_once("../modelo/modalidades.php");
 
 </fieldset>
 </form>
-<script>
-	$(function() {
-		// setup ul.tabs to work as tabs for each div directly under div.panes
-		$("#tabs").tabs();
-	});
-</script>
+
 </body>
 </html>

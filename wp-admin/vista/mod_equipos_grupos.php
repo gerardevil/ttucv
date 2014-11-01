@@ -77,7 +77,7 @@
 		var cantGrupos = parseInt($('#nro_grupos').val());
 		
 		if(interId != ''){
-			if(confirm('Esto eliminará los grupos ya cargados. \u00BFDeseas hacerlo de todas formas? ')){
+			if(confirm('Esto eliminarï¿½ los grupos ya cargados. \u00BFDeseas hacerlo de todas formas? ')){
 				$('#panelGrupos').html('');
 				
 				for(i=1;i<=cantGrupos;i++){
